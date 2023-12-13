@@ -139,12 +139,7 @@ class App(ctk.CTk):
         ctk.set_appearance_mode(nova_aparencia) 
 
 
-            
-
-
-      
-
 
 if __name__=="__main__":
     app = App()
-    app.mainloop()         
+    app.mainloop()       
