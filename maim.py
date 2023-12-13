@@ -7,6 +7,7 @@ from tkinter import messagebox
 import openpyxl, xlrd
 import pathlib
 from openpyxl import Workbook
+from openpyxl.reader.excel import load_workbook
 
 # Aparencia padrão do sistema
 ctk.set_appearance_mode("Sistema")
@@ -17,7 +18,7 @@ class App(ctk.CTk):
        super().__init__()
        self.layout_config() 
        self.appearence()
-       self.todo_sistema()
+       self.todo_sistema()       
 
 
     def layout_config(self):
@@ -27,18 +28,19 @@ class App(ctk.CTk):
     def appearence(self):
         self.lb_apm = ctk.CTkLabel(self, text="tema", bg_color="transparent", text_color=['#000', "#fff"]).place(x=50, y=430) 
         self.opt_apm = ctk.CTkOptionMenu(self, values=['Ligtht', 'Dark', 'System'], command=self.change_apm).place(x=50, y=460)
-
+        
     def todo_sistema(self):
         Frame = ctk.CTkFrame(self, width=700, height=50, corner_radius=0, bg_color='teal', fg_color='transparent').place(x=0, y=10)
-        title = ctk.CTkLabel(Frame, text='Sistema de Gestão de Clientes', font=('Century Gothic bold', 24), text_color='#fff',fg_color='teal').place(x=150, y=20)
+        title = ctk.CTkLabel(Frame, text='Sistema de Gestão de Clientes', font=('Century Gothic bold', 24), text_color='#fff',fg_color='teal').place(x=150, y=20)                
 
         span = ctk.CTkLabel(Frame, text='Por favor, preencha todos os campos do formulário!', font=('Century Gothic bold', 16), text_color=['#000', '#fff']).place(x=50, y=70)
 
-        ficheiro = pathlib.Path("Clientes.xlsx")
+        ficheiro = pathlib.Path('Clientes.xlsx')
+
         if ficheiro.exists():
             pass
         else:
-            ficheiro.Workbook   
+            ficheiro=Workbook()
             folha=ficheiro.active
             folha['A1']= 'Nome completo'
             folha['B1']= 'Contato'
@@ -47,47 +49,44 @@ class App(ctk.CTk):
             folha['E1']= 'Endereço'
             folha['F1']=  'Observações'
 
-            ficheiro.save('Clientes.xlsx')
-
+            ficheiro.save("Clientes.xlsx")
 
         def submit():
 
-          
             # pegando os dados dos entrys
-            name = name_entry.get()
+            name = name_value.get()
             contact = contact_value.get()
-            age= age_value.get()
+            age = age_value.get()
             gender = gender_combobox.get()
             adress = adress_value.get()
             obs = obs_entry.get(0.0, END)
 
-            ficheiro = openpyxl.load_Workbook('Cliente.xlsx')
-            folha = ficheiro.active
-            folha.cell(column=1, row=folha.max_row+1, velue=name) 
-            folha.cell(column=2, row=folha.max_row, velue=contact) 
-            folha.cell(column=3, row=folha.max_row, velue=adress)
-            folha.cell(column=4, row=folha.max_row, velue=age) 
-            folha.cell(column=5, row=folha.max_row, velue=gender) 
-            folha.cell(column=6, row=folha.max_row, velue=obs)                                                  
 
-            ficheiro.save(r'Cliente.xlsx')
-            messagebox.showinfo('Sistema', 'Dados sauvos com sucesso')
+            ficheiro = openpyxl.load_workbook("Clientes.xlsx")
+            folha = ficheiro.active                  
+            folha.cell(column=1, row=folha.max_row+1, value=name) 
+            folha.cell(column=2, row=folha.max_row, value=contact) 
+            folha.cell(column=3, row=folha.max_row, value=age)
+            folha.cell(column=4, row=folha.max_row, value=gender) 
+            folha.cell(column=5, row=folha.max_row, value=adress) 
+            folha.cell(column=6, row=folha.max_row, value=obs)   
+
+            ficheiro.save("Clientes.xlsx")
+            messagebox.showinfo('Sistema', 'Dados salvos com sucesso')
 
         def clear():
             name_value.set("")
             contact_value.set("")
             age_value.set("")
             adress_value.set("")
-            obs_entry.delete(0.0, END)  
+            obs_entry.delete(0.0, END)    
 
         # Textos vairiaveis 
 
         name_value = StringVar()
         contact_value = StringVar()
         age_value = StringVar()
-        adress_value = StringVar()
-       
-
+        adress_value = StringVar()                      
 
         # Entrys
         name_entry = ctk.CTkEntry(self, width=350, textvariable=name_value, font=('Century Gohtic bold', 16), fg_color='transparent')
@@ -95,13 +94,12 @@ class App(ctk.CTk):
         adress_entry = ctk.CTkEntry(self, width=200, textvariable=adress_value, font=('Century Gohtic bold', 16), fg_color='transparent')
         age_entry = ctk.CTkEntry(self, width=150, textvariable=age_value, font=('Century Gohtic', 16), fg_color='transparent')
        
-
-
-      
+       
         #combobox
         gender_combobox = ctk.CTkComboBox(self, values=['Masculino', 'Feminino',], font=('entury Gothic bold', 14), width=150)
         gender_combobox.set('Masculino')
 
+        
         #Entrada de observações
         obs_entry = ctk.CTkTextbox(self, width=470, height=150, font=('arial', 18), border_color='#aaa',border_width=2, fg_color='transparent')
 
@@ -116,7 +114,7 @@ class App(ctk.CTk):
 
         btn_submit = ctk.CTkButton(self, text='Salvar dados'.upper(), command=submit, fg_color='#151', hover_color='#131').place(x=300, y=420)
         btn_submit = ctk.CTkButton(self, text='Limpar campos'.upper(), command=clear, fg_color='#555', hover_color='#333').place(x=500, y=420)
-    
+
         #Posicionando os elementos na Janela
         lb_name.place(x=50, y=120)
         name_entry.place(x=50, y=150)
@@ -132,19 +130,21 @@ class App(ctk.CTk):
 
         lb_gender.place(x=500, y=190)
         gender_combobox.place(x=500, y=220)
-
         
-
         lb_obs.place(x=50, y=260)
         obs_entry.place(x=180, y=260)
 
-       
 
     def change_apm(self, nova_aparencia):
-        ctk.set_appearance_mode(nova_aparencia)
+        ctk.set_appearance_mode(nova_aparencia) 
+
+
+            
+
+
+      
+
 
 if __name__=="__main__":
     app = App()
     app.mainloop()         
-
-
